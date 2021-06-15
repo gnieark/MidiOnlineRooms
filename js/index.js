@@ -40,7 +40,14 @@ if (navigator.requestMIDIAccess) {
 
 function onMIDISuccess(midiAccess) {
     var inputs = midiAccess.inputs;
+    inputs.forEach( function( port, key ) {
+        var opt = createElem("option");
+        opt.text = port.name;
+        document.getElementById("selectInputMidiPorts").add(opt);
+      });
+
     var outputs = midiAccess.outputs;
+    console.log(inputs);
 
     for (var input of midiAccess.inputs.values()) {
         input.onmidimessage = getMIDIMessage;
