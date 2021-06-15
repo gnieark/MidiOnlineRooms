@@ -1,3 +1,33 @@
+var displayMidiLogs = false;
+window.onload = function () {
+
+    var displayMidiLogsCheckbox = document.querySelector("input[name=displayMidiCodeCheckbox]");
+    displayMidiLogsCheckbox.addEventListener('change', function() {
+    if (this.checked) {
+        displayMidiLogs = true;
+        document.getElementById("midilogs").style.display = "";
+    } else {
+        displayMidiLogs = false;
+        document.getElementById("midilogs").style.display = "none";
+    }
+    });
+
+    MIDI.loadPlugin({
+        soundfontUrl: "./soundfont/",
+        instrument: "acoustic_grand_piano",
+        onprogress: function(state, progress) {
+            console.log(state, progress);
+        },
+        onsuccess: function() {
+
+        }
+    });
+};
+
+
+
+
+
 
 if (navigator.requestMIDIAccess) {
     console.log('WebMIDI is supported in this browser.');
@@ -24,10 +54,27 @@ function getMIDIMessage(message) {
     var command = message.data[0];
     var note = message.data[1];
     var velocity = message.data[2];
-
+    if(displayMidiLogs){
+        addMidilog(message);
+    }
    switch (command) {
         case 144: // noteOn
             MIDI.noteOn(0, note, velocity);
             break;
+        case 128:
+            MIDI.noteOff(0,note,0.01);
   }
+}
+
+function addMidilog(message)
+{
+    let pmessage = createElem("p");
+    pmessage.innerHTML = message.data[0] + ' ' + message.data[1]  + ' ' + message.data[2];
+    document.getElementById("midilogs").appendChild(pmessage);
+}
+function createElem(type,attributes){
+    var elem=document.createElement(type);
+    for (var i in attributes)
+    {elem.setAttribute(i,attributes[i]);}
+    return elem;
 }
