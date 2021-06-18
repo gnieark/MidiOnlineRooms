@@ -39,15 +39,27 @@ if (navigator.requestMIDIAccess) {
 }
 
 function onMIDISuccess(midiAccess) {
+
     var inputs = midiAccess.inputs;
+    let ulContainer = document.getElementById("midiInList");
+    ulContainer.textContent = '';
     inputs.forEach( function( port, key ) {
-        var opt = createElem("option");
-        opt.text = port.name;
-        document.getElementById("selectInputMidiPorts").add(opt);
+
+        let liElem = createElem("li",{});
+        liElem.textContent = port.name;
+        ulContainer.appendChild(liElem);
       });
 
     var outputs = midiAccess.outputs;
-    console.log(inputs);
+    ulContainer = document.getElementById("midiOutList");
+    ulContainer.textContent = '';
+    outputs .forEach( function( port, key ) {
+
+        let liElem = createElem("li",{});
+        liElem.textContent = port.name;
+        ulContainer.appendChild(liElem);
+      });  
+
 
     for (var input of midiAccess.inputs.values()) {
         input.onmidimessage = getMIDIMessage;
