@@ -24,11 +24,6 @@ window.onload = function () {
     });
 };
 
-
-
-
-
-
 if (navigator.requestMIDIAccess) {
     console.log('WebMIDI is supported in this browser.');
     navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
@@ -38,28 +33,61 @@ if (navigator.requestMIDIAccess) {
     document.querySelector('.note-info').textContent = 'Error: This browser does not support WebMIDI.';
 }
 
+function createInputSettingLine(port,key,io)
+{
+    let pLine = createElem("p", {});
+    let emTitle = createElem("em");
+    emTitle.textContent = port;
+    pLine.appendChild(emTitle);
+
+    let activateMidiCheckbox = createElem("input",{"type":"checkbox",name: key + "on", "id": "midiInActive" + io + key});
+    pLine.appendChild(activateMidiCheckbox );
+    let labelActivateMidiCheckbox = createElem("label",{"for": "midiInActive" + key});
+    labelActivateMidiCheckbox.textContent = "Activer";
+    pLine.appendChild(labelActivateMidiCheckbox);
+
+
+    let labelVolume = createElem("label",{"for": "volume" + io  + key});
+    labelVolume.textContent = "Volume:";
+    let inputVolume = createElem("input",{"type":"number","min":0,"max":100,"name":"volume" + key, "id" : "volume" + io  + key});
+
+    pLine.appendChild(labelVolume);
+    pLine.appendChild(inputVolume);
+    
+    let labelChanelToUse = createElem("label",{"for": "channel" + io  + key});
+    labelChanelToUse.textContent = "Midi chanel to use:";
+    pLine.appendChild(labelChanelToUse);
+    let selectChannelToUse = createElem("select",{"name": "channel" + io  + key, "id": "channel" + io + key});
+    for(let i=0; i < 16; i++ ){
+        let option = createElem("option",{"value":i});
+        option.textContent = i;
+        selectChannelToUse.appendChild(option);
+    }
+    pLine.appendChild(selectChannelToUse);
+
+    return pLine
+
+}
+
 function onMIDISuccess(midiAccess) {
 
+    
     var inputs = midiAccess.inputs;
-    let ulContainer = document.getElementById("midiInList");
-    ulContainer.textContent = '';
+
+    //settings container
+    let settingsSection = document.getElementById("settingsSection");
+
+    let midiIOList = createElem("article",{"class":"midiIOlist"});
+
+    let midiIOListTitle = createElem("H2",{});
+    midiIOListTitle.textContent = "Input midi devices";
+    midiIOList.appendChild(midiIOListTitle);
+
     inputs.forEach( function( port, key ) {
-
-        let liElem = createElem("li",{});
-        liElem.textContent = port.name;
-        ulContainer.appendChild(liElem);
-      });
-
-    var outputs = midiAccess.outputs;
-    ulContainer = document.getElementById("midiOutList");
-    ulContainer.textContent = '';
-    outputs .forEach( function( port, key ) {
-
-        let liElem = createElem("li",{});
-        liElem.textContent = port.name;
-        ulContainer.appendChild(liElem);
-      });  
-
+       midiIOList.appendChild(createInputSettingLine(port,key,"in")); 
+        
+    });
+    settingsSection.appendChild(midiIOList);
 
     for (var input of midiAccess.inputs.values()) {
         input.onmidimessage = getMIDIMessage;
