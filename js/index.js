@@ -1,16 +1,8 @@
 var displayMidiLogs = false;
 window.onload = function () {
 
-    var displayMidiLogsCheckbox = document.querySelector("input[name=displayMidiCodeCheckbox]");
-    displayMidiLogsCheckbox.addEventListener('change', function() {
-    if (this.checked) {
-        displayMidiLogs = true;
-        document.getElementById("midilogs").style.display = "";
-    } else {
-        displayMidiLogs = false;
-        document.getElementById("midilogs").style.display = "none";
-    }
-    });
+    
+
 
     MIDI.loadPlugin({
         soundfontUrl: "./soundfont/",
@@ -35,37 +27,46 @@ if (navigator.requestMIDIAccess) {
 
 function createInputSettingLine(port,key,io)
 {
-    let pLine = createElem("p", {});
-    let emTitle = createElem("em");
-    emTitle.textContent = port;
-    pLine.appendChild(emTitle);
+    /*
+    .check{ grid-area:check;}
+.labelCheck{ grid-area: labelCheck;}
+.labelVolume{ grid-area: labelVolume;}
+.inputVolume{ grid-area: inputVolume;}
+.labelChanel{ grid-area: labelChanel;}
+.chanelInput{ grid-area: chanelInput;}
 
-    let activateMidiCheckbox = createElem("input",{"type":"checkbox",name: key + "on", "id": "midiInActive" + io + key});
-    pLine.appendChild(activateMidiCheckbox );
-    let labelActivateMidiCheckbox = createElem("label",{"for": "midiInActive" + key});
-    labelActivateMidiCheckbox.textContent = "Activer";
-    pLine.appendChild(labelActivateMidiCheckbox);
+*/
+    let container = createElem("div", {"class":"blIODevice"});
+    let emTitle = createElem("h3",{"class":"t"});
+    emTitle.textContent = port.name;
+    container.appendChild(emTitle);
+
+    let activateMidiCheckbox = createElem("input",{"class": "check","type":"checkbox",name: key + "on", "id": "midiInActive" + io + key});
+    container.appendChild(activateMidiCheckbox );
+    let labelActivateMidiCheckbox = createElem("label",{"class" : "labelCheck", "for": "midiInActive" + key});
+    labelActivateMidiCheckbox.textContent = "Activate";
+    container.appendChild(labelActivateMidiCheckbox);
 
 
-    let labelVolume = createElem("label",{"for": "volume" + io  + key});
+    let labelVolume = createElem("label",{"class":"labelVolume","for": "volume" + io  + key});
     labelVolume.textContent = "Volume:";
-    let inputVolume = createElem("input",{"type":"number","min":0,"max":100,"name":"volume" + key, "id" : "volume" + io  + key});
+    let inputVolume = createElem("input",{"class":"inputVolume","type":"number","min":0,"max":100,"name":"volume" + key, "id" : "volume" + io  + key});
 
-    pLine.appendChild(labelVolume);
-    pLine.appendChild(inputVolume);
+    container.appendChild(labelVolume);
+    container.appendChild(inputVolume);
     
-    let labelChanelToUse = createElem("label",{"for": "channel" + io  + key});
+    let labelChanelToUse = createElem("label",{"class":"labelChanel", "for": "channel" + io  + key});
     labelChanelToUse.textContent = "Midi chanel to use:";
-    pLine.appendChild(labelChanelToUse);
-    let selectChannelToUse = createElem("select",{"name": "channel" + io  + key, "id": "channel" + io + key});
+    container.appendChild(labelChanelToUse);
+    let selectChannelToUse = createElem("select",{"class": "chanelInput", "name": "channel" + io  + key, "id": "channel" + io + key});
     for(let i=0; i < 16; i++ ){
         let option = createElem("option",{"value":i});
         option.textContent = i;
         selectChannelToUse.appendChild(option);
     }
-    pLine.appendChild(selectChannelToUse);
+    container.appendChild(selectChannelToUse);
 
-    return pLine
+    return container
 
 }
 
@@ -77,17 +78,30 @@ function onMIDISuccess(midiAccess) {
     //settings container
     let settingsSection = document.getElementById("settingsSection");
 
-    let midiIOList = createElem("article",{"class":"midiIOlist"});
+    let midiInList = createElem("article",{"class":"midiIOlist"});
 
-    let midiIOListTitle = createElem("H2",{});
-    midiIOListTitle.textContent = "Input midi devices";
-    midiIOList.appendChild(midiIOListTitle);
+    let midiInputListTitle = createElem("H2",{});
+    midiInputListTitle.textContent = "Input midi devices";
+    midiInList.appendChild(midiInputListTitle);
 
     inputs.forEach( function( port, key ) {
-       midiIOList.appendChild(createInputSettingLine(port,key,"in")); 
+       midiInList.appendChild(createInputSettingLine(port,key,"in")); 
         
     });
-    settingsSection.appendChild(midiIOList);
+    settingsSection.appendChild(midiInList);
+
+    let midiOutList = createElem("article",{"class":"midiIOlist"});
+    let midiOutputListTitle = createElem("H2",{});
+    midiOutputListTitle.textContent = "Output midi devices";
+    midiOutList.appendChild(midiOutputListTitle);
+
+    var outputs = midiAccess.outputs;
+    outputs.forEach( function(port, key) {
+        midiOutList.appendChild( createInputSettingLine(port,key,"out") );
+    });
+    settingsSection.appendChild(midiOutList);
+
+
 
     for (var input of midiAccess.inputs.values()) {
         input.onmidimessage = getMIDIMessage;
@@ -124,4 +138,12 @@ function createElem(type,attributes){
     for (var i in attributes)
     {elem.setAttribute(i,attributes[i]);}
     return elem;
+}
+function showHideSettings(){
+    if (document.getElementById("settingsSection").style.display == "none")
+    {
+        document.getElementById("settingsSection").style.display = "";
+    }else{
+        document.getElementById("settingsSection").style.display = "none";
+    }
 }

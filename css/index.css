@@ -6,10 +6,27 @@
 html, body {
     height: 100%;
 }
-
+nav{cursor:pointer;}
 body {
     background: radial-gradient(rgba(54, 17, 69, 1), rgba(48, 20, 59, 1));;
     font-family: 'Roboto Mono', Arial, sans-serif;
     color: white;
 }
+.midiIOlist{
+    width: 30em;
+}
+.blIODevice{
+    display: grid;
+    grid-template-areas:
+        "t  t   t   t   t   t   t   t"
+        "check  labelCheck  .   labelVolume inputVolume .   labelChanel chanelInput";
+
+}
+.t {grid-area: t;}
+.check{ grid-area:check;}
+.labelCheck{ grid-area: labelCheck;}
+.labelVolume{ grid-area: labelVolume;}
+.inputVolume{ grid-area: inputVolume;}
+.labelChanel{ grid-area: labelChanel;}
+.chanelInput{ grid-area: chanelInput;}
 

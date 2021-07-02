@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html>
     <head>
-            <link rel="stylesheet" type="text/css" href="./css/index.css">
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="./css/index.css">
 
-            <script src="./inc/shim/Base64.js" type="text/javascript"></script>
-            <script src="./inc/shim/Base64binary.js" type="text/javascript"></script>
-            <script src="./inc/shim/WebAudioAPI.js" type="text/javascript"></script>
-            <script src="./inc/shim/WebMIDIAPI.js" type="text/javascript"></script>
-            <!-- jasmid package -->
-            <script src="./inc/jasmid/stream.js"></script>
-            <script src="./inc/jasmid/midifile.js"></script>
-            <script src="./inc/jasmid/replayer.js"></script>
+        <script src="./inc/shim/Base64.js" type="text/javascript"></script>
+        <script src="./inc/shim/Base64binary.js" type="text/javascript"></script>
+        <script src="./inc/shim/WebAudioAPI.js" type="text/javascript"></script>
+        <script src="./inc/shim/WebMIDIAPI.js" type="text/javascript"></script>
+        <!-- jasmid package -->
+        <script src="./inc/jasmid/stream.js"></script>
+        <script src="./inc/jasmid/midifile.js"></script>
+        <script src="./inc/jasmid/replayer.js"></script>
 
-        	<script src="./js/midi/audioDetect.js" type="text/javascript"></script>
-            <script src="./js/midi/gm.js" type="text/javascript"></script>
-            <script src="./js/midi/loader.js" type="text/javascript"></script>
-            <script src="./js/midi/plugin.audiotag.js" type="text/javascript"></script>
-            <script src="./js/midi/plugin.webaudio.js" type="text/javascript"></script>
-            <script src="./js/midi/plugin.webmidi.js" type="text/javascript"></script>
-            <script src="./js/util/dom_request_xhr.js" type="text/javascript"></script>
-	        <script src="./js/util/dom_request_script.js" type="text/javascript"></script>
+        <script src="./js/midi/audioDetect.js" type="text/javascript"></script>
+        <script src="./js/midi/gm.js" type="text/javascript"></script>
+        <script src="./js/midi/loader.js" type="text/javascript"></script>
+        <script src="./js/midi/plugin.audiotag.js" type="text/javascript"></script>
+        <script src="./js/midi/plugin.webaudio.js" type="text/javascript"></script>
+        <script src="./js/midi/plugin.webmidi.js" type="text/javascript"></script>
+        <script src="./js/util/dom_request_xhr.js" type="text/javascript"></script>
+        <script src="./js/util/dom_request_script.js" type="text/javascript"></script>
     </head>
     <body>
-        <section class="settings" id="settingsSection">
+        <nav onclick="showHideSettings();">⚙</nav>
+        <section class="settings" id="settingsSection" style="display:none;">
         </section>
         <article id="midilogs" style="display:none;"></article>
         <script src="./js/index.js"></script>
