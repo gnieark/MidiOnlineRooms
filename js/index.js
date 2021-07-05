@@ -1,9 +1,7 @@
 var displayMidiLogs = false;
+var midiAccessG = true; 
+
 window.onload = function () {
-
-    
-
-
     MIDI.loadPlugin({
         soundfontUrl: "./soundfont/",
         instrument: "acoustic_grand_piano",
@@ -24,24 +22,38 @@ if (navigator.requestMIDIAccess) {
     console.log('WebMIDI is not supported in this browser.');
     document.querySelector('.note-info').textContent = 'Error: This browser does not support WebMIDI.';
 }
-
+function activateMidiCheck(checkbox)
+{
+    //midiAccessG
+    if( checkbox.id.startsWith("midiInActivein") ){
+        
+    }
+     
+}
 function createInputSettingLine(port,key,io)
 {
-    /*
-    .check{ grid-area:check;}
-.labelCheck{ grid-area: labelCheck;}
-.labelVolume{ grid-area: labelVolume;}
-.inputVolume{ grid-area: inputVolume;}
-.labelChanel{ grid-area: labelChanel;}
-.chanelInput{ grid-area: chanelInput;}
-
-*/
     let container = createElem("div", {"class":"blIODevice"});
     let emTitle = createElem("h3",{"class":"t"});
     emTitle.textContent = port.name;
     container.appendChild(emTitle);
 
-    let activateMidiCheckbox = createElem("input",{"class": "check","type":"checkbox",name: key + "on", "id": "midiInActive" + io + key});
+
+    let activateMidiCheckbox = createElem("input",{ 
+                                                    "class": "check"
+                                                    ,"type":"checkbox"
+                                                    ,name: port.name
+                                                    ,"id": "midiInActive" + io + key
+                                                    });
+   //check if is connected
+   if( io == "in" )
+   {
+        activateMidiCheckbox.setAttribute("checked","checked");
+   }
+
+    activateMidiCheckbox.addEventListener('change', function() { 
+        activateMidiCheck(this); 
+    }); 
+
     container.appendChild(activateMidiCheckbox );
     let labelActivateMidiCheckbox = createElem("label",{"class" : "labelCheck", "for": "midiInActive" + key});
     labelActivateMidiCheckbox.textContent = "Activate";
@@ -66,14 +78,17 @@ function createInputSettingLine(port,key,io)
     }
     container.appendChild(selectChannelToUse);
 
-    return container
+    return container;
 
 }
 
 function onMIDISuccess(midiAccess) {
 
-    
     var inputs = midiAccess.inputs;
+
+    for (var input of midiAccess.inputs.values()) {
+        input.onmidimessage = getMIDIMessage;
+    }
 
     //settings container
     let settingsSection = document.getElementById("settingsSection");
@@ -101,12 +116,10 @@ function onMIDISuccess(midiAccess) {
     });
     settingsSection.appendChild(midiOutList);
 
+    midiAccessG = midiAccess;
 
-
-    for (var input of midiAccess.inputs.values()) {
-        input.onmidimessage = getMIDIMessage;
-    }
 }
+
 
 function onMIDIFailure(m){
 
