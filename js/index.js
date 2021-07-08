@@ -22,13 +22,26 @@ if (navigator.requestMIDIAccess) {
     console.log('WebMIDI is not supported in this browser.');
     document.querySelector('.note-info').textContent = 'Error: This browser does not support WebMIDI.';
 }
+function doNothing(){
+
+}
 function activateMidiCheck(checkbox)
 {
     //midiAccessG
     if( checkbox.id.startsWith("midiInActivein") ){
         
+        for (var input of midiAccessG.inputs.values()) {
+            if((input.name == checkbox.name)  && checkbox.checked){
+                    input.onmidimessage = getMIDIMessage;
+            }else if((input.name == checkbox.name)  && !checkbox.checked){
+                input.onmidimessage = doNothing;
+            }
+        }
+    }else{
+        //outputs;
+        
     }
-     
+   
 }
 function createInputSettingLine(port,key,io)
 {
@@ -44,11 +57,9 @@ function createInputSettingLine(port,key,io)
                                                     ,name: port.name
                                                     ,"id": "midiInActive" + io + key
                                                     });
-   //check if is connected
    if( io == "in" )
-   {
         activateMidiCheckbox.setAttribute("checked","checked");
-   }
+   
 
     activateMidiCheckbox.addEventListener('change', function() { 
         activateMidiCheck(this); 
